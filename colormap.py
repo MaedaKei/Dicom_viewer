@@ -30,7 +30,8 @@ def colormap(color_num=30,mode=0):
     #print(rgb)
     cmap=colors.ListedColormap(rgb)
     #print(cmap.N)
-    norm=colors.BoundaryNorm(np.arange(cmap.N+1)-0.5,cmap.N)#映したい画素値がビンの境界に設定されると変な感じになるので0の色になるが措置の範囲は-0.5～0.5、1は0.5～1.5という風にした
+    #画素値がビンの境界に設定されると色が変になるので0の色になる画素値の範囲は-0.5～0.5、1は0.5～1.5という風にした
+    norm=colors.BoundaryNorm(np.arange(cmap.N+1)-0.5,cmap.N)
     """
     print(norm.N)
     print(norm.boundaries)
