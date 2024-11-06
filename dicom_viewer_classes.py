@@ -64,7 +64,7 @@ class dicom_viwer_base:
                 seg_check=1
                 max_pixel_range=max(max_pixel_range,pixel_range)
             self.SEG_OR_NOT.append(seg_check)
-            #print(len(images),images.shape)
+            print(len(images),images.shape)
             self.all_images.append(images)
             os.chdir(start_dir)
         self.all_images=np.array(self.all_images)
@@ -79,11 +79,13 @@ class dicom_viwer_base:
         check=check.prod(axis=0)
         check=(check!=0)
         #print(check,check.ndim)
+        """
         check=np.array(np.where(check==1))#tuple
         if len(check)>0:
             init_slice=int(check[:,0])
         else:
             print("異常事態")
+        """
         dir_num=len(self.all_images)
         height_ratios=np.ones(ax_rows)*0.3
         height_ratios[0]=20
@@ -151,7 +153,7 @@ class dicom_viwer_base:
         span=SpanSelector(hist_ax,span_select,"horizontal",useblit=True,props=dict(alpha=0.5,facecolor="tab:blue"),interactive=True,drag_from_anywhere=True)
         plt.show()
     def dicom2ndarray(self,dicom_file):
-        ref=dicom.read_file(dicom_file,force=True)
+        ref=dicom.dcmread(dicom_file,force=True)
         img=ref.pixel_array
         return img
     def show(self):
@@ -234,7 +236,7 @@ class image_clip:
             self.fig.canvas.draw_idle()
     def push_clip_reset(self,dammy):
         for ax in self.img_ax_list:
-            ax.set_xlim(0,self.original_H)
-            ax.set_ylim(self.original_W,0)
+            ax.set_xlim(0,self.original_W)
+            ax.set_ylim(self.original_H,0)
         self.fig.canvas.draw_idle()
 

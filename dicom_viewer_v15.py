@@ -12,7 +12,7 @@ from dicom_viewer_classes import *
 
 """
 ディレクトリのみに対応
-PAPXXXまでは指定できるようにする
+PA?XXXまでは指定できるようにする
 v4読み込み高速化
 v5複数画像に個別のスライス操作可能に
 v6枚数合わせの際に最大枚数に併せて足りないところは0うめにする
@@ -34,9 +34,11 @@ def dicom_viewer_arguments(args_list=None):
     return args
     
 def dicom_viewer(args):
+    #使用したい機能.need_ROWsをここで加算する
     need_ROWs=dicom_viwer_base.need_ROWs+image_slice.need_ROWs+image_clip.need_ROWs
+    
     #need_ROWs=dicom_viwer_base.need_ROWs+image_clip.need_ROWs
-    #必要な変数を持っているので何か機能を追加するときは引数にbase_instanceを渡すようにする
+    #必要な変数はすべてbase_instanceに含まれているので何か機能を追加するときは引数にbase_instanceを渡すようにする
     #dicom_viwer_baseの略
     base_instance=dicom_viwer_base(args,need_ROWs)
     image_slice_instance=image_slice(base_instance)
