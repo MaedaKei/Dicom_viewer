@@ -10,6 +10,18 @@ from colormap import colormap
 from functools import partial
 
 class dicom_viwer_base:
+    """
+    Dicom_viewerの基本の機能を実装したクラス
+
+    画像の表示と画像の階調の機能を担っている。
+
+    引数
+    args : dicom_viewer_v??.pyから渡されてくるファイルのパスなどのコマンドライン引数
+    ax_rows : dicom_viewer_v??.pyでユーザーが設定した機能を表示するために必要な行数
+
+    戻り値
+
+    """
     need_ROWs=2#画像,メニュー
     def __init__(self,args,ax_rows):
         #画像を読み込むための関数を切り替え
@@ -114,7 +126,7 @@ class dicom_viwer_base:
         self.fig,self.all_image, self.hist_list, self.ax_list, self.image_table_listを外側から参照して使う
         """
     #諧調ボタンが押された時の動き
-    def push_tone_button(self,damy_ars,image_table,hist):
+    def push_tone_button(self,dammy_ars,image_table,hist):
         #画像のもとの
         tone_window_fig=plt.figure(figsize=(5,5),tight_layout=True)
         tone_window_gs=gridspec.GridSpec(3,1,height_ratios=[20,0.5,0.5])
@@ -126,7 +138,7 @@ class dicom_viwer_base:
         #現在の画素値範囲,元の画素値範囲
         now_lower,now_upper=image_table.norm.vmin,image_table.norm.vmax
         original_lower,original_upper=hist[0][0],hist[0][-1]
-        #スライダーを動かして更新されるやつらは変数に入れておくらしい
+        #スライダーを動かして更新されるやつらは変数に入れておく
         value_text=hist_ax.set_title(f"{now_lower} ~ {now_upper}")
         lower_limit_line=hist_ax.axvline(now_lower,color="#FF0000",alpha=0.5)
         upper_limit_line=hist_ax.axvline(now_upper,color="#FF0000",alpha=0.5)
@@ -147,9 +159,11 @@ class dicom_viwer_base:
             self.fig.canvas.draw_idle()
         center_slice.on_changed(tone_slice_update)
         range_slice.on_changed(tone_slice_update)
+        """
         def span_select(xmin,xmax):
             pass
         span=SpanSelector(hist_ax,span_select,"horizontal",useblit=True,props=dict(alpha=0.5,facecolor="tab:blue"),interactive=True,drag_from_anywhere=True)
+        """
         plt.show()
     def dicom2ndarray(self,dicom_file):
         ref=dicom.dcmread(dicom_file,force=True)
@@ -158,7 +172,17 @@ class dicom_viwer_base:
     def show(self):
         plt.show()
 
+"""
+各種機能を追加する↓
+引数 : base_instance
+dicom_viewer_baseクラスをインスタンス化したもの。必要な情報をインスタンス変数として保持してあるので、各種機能の実装で必要なものを参照する。
+"""
 class image_slice:
+    """
+    画像を送り見するための機能を実装したクラス
+
+    画像ごとに個別に送り見するためのスライダー、並べた画像を同時に送るスライダー、画像ごとの表示位置を揃えるためのボタンを持っている
+    """
     need_ROWs=3#個別のスライサー、統合スライサー、調整ボタン
     def __init__(self,base_instance):
         self.slicer_len=len(base_instance.all_images[0])
@@ -208,6 +232,11 @@ class image_slice:
         self.fig.canvas.draw_idle()
 
 class image_clip:
+    """
+    画像の拡大機能を実装したクラス。画像の縮小はできないのでリセットボタンで元に戻す。
+
+    画像を並べている状態でどれかの画像を拡大すると、並べてある画像すべてで同じように拡大できる。
+    """
     need_ROWs=1#clip_reset_button
     def __init__(self,base_instance):
         self.fig=base_instance.fig
