@@ -11,13 +11,17 @@ def dicom_viewer_arguments(args_list=None):
     return args
     
 def dicom_viewer(args):
+    #base_instanceが機能の実装に必要な変数を持っているので何か機能を追加するときは引数にbase_instanceを渡すようにする
+    #いらない機能を使用せずに実行したいときは、need_ROWsの計算でいらない機能の項を削除して、その機能のインスタンス化の記述をコメントアウトする
+
+    #必要な行数計算
     need_ROWs=dicom_viwer_base.need_ROWs+image_slice.need_ROWs+image_clip.need_ROWs
-    #need_ROWs=dicom_viwer_base.need_ROWs+image_clip.need_ROWs
-    #必要な変数を持っているので何か機能を追加するときは引数にbase_instanceを渡すようにする
-    #dicom_viwer_baseの略
+
+    #各種機能有効化
     base_instance=dicom_viwer_base(args,need_ROWs)
     image_slice_instance=image_slice(base_instance)
     image_clip_instance=image_clip(base_instance)
+
     base_instance.show()
 
 
