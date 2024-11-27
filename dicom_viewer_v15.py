@@ -25,7 +25,7 @@ def dicom_viewer_arguments(args_list=None):
 def dicom_viewer(args):
     #使用する機能が必要とする行数を計算する
     need_ROWs=dicom_viwer_base.need_ROWs+image_slice.need_ROWs+image_clip.need_ROWs
-    #dicom_viwer_baseの略
+    
     base_instance=dicom_viwer_base(args,need_ROWs)
 
     #使用したい機能をインスタンス化
